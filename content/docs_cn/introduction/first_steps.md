@@ -5,7 +5,7 @@ sort_rank: 3
 
 # Prometheus 入门
 
-Welcome to Prometheus! Prometheus is a monitoring platform that collects metrics from monitored targets by scraping metrics HTTP endpoints on these targets. This guide will show you to how to install, configure and monitor our first resource with Prometheus. You'll download, install and run Prometheus. You'll also download and install an exporter, tools that expose time series data on hosts and services. Our first exporter will be the Node Exporter, which exposes host-level metrics like CPU, memory, and disk. 
+欢迎使用Prometheus！Prometheus是一个监控平台，它通过被监控目标对外暴露的HTTP接口来抓取相关的数据指标。这篇入门文章会告诉你如何安装和配置Prometheus来监控你的第一个集群资源。你将会下载、安装和运行Prometheus，以及下载和安装一个 exporter， exporter是一个用于暴露主机或服务时序数据的工具。这里使用的第一个exporter是Node Exporter，它是用于提供主机级别的相关指标，比如CPU、内存以及磁盘等信息。
 
 ## 下载 Prometheus
 
@@ -30,9 +30,9 @@ The Prometheus monitoring server
 
 ## 配置 Prometheus
 
-Prometheus configuration is [YAML](http://www.yaml.org/start.html). The Prometheus download comes with a sample configuration in a file called `prometheus.yml` that is a good place to get started.
+Prometheus使用[YAML](http://www.yaml.org/start.html)语法进行配置。下载Prometheus之后会在压缩包中发现一个叫做 `prometheus.yml` 的样例配置文件，我们可以从它开始进行配置。
 
-We've stripped out most of the comments in the example file to make it more succinct (comments are the lines prefixed with a `#`).
+我们已经删除了示例文件中的大部分注释（以`#`为前缀的行为注释），以使其更加简洁。
 
 ```language-yaml
 global:
