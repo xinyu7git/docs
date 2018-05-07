@@ -49,42 +49,35 @@ scrape_configs:
       - targets: ['localhost:9090']
 ```
 
-There are three blocks of configuration in the example configuration file: `global`, `rule_files`, and `scrape_configs`. 
+在上面的样例配置文件中有三个配置区域： `global`, `rule_files`, and `scrape_configs`.
 
-The `global` block controls the Prometheus server's global configuration. We have two options present. The first, `scrape_interval`, controls how often Prometheus will scrape targets. You can override this for individual targets. In this case the global setting is to scrape every 15 seconds. The `evaluation_interval` option controls how often Prometheus will evaluate rules. Prometheus uses rules to create new time series and to generate alerts.
+`global` 配置区域控制Prometheus server的全局配置，当前支持两个选项。第一个是 `scrape_interval`, 该选项控制Prometheus抓取所有目标数据的频率，当然你也可以为具体的目标单独配置。在上面的样例中，我们设置的全局抓取数据的时间间隔为15秒。`evaluation_interval` 选项是用来控制Prometheus计算规则的时间间隔，Prometheus使用相关的规则`rules`来创建新的时序数据以及生成报警。
 
-The `rule_files` block specifies the location of any rules we want the Prometheus server to load. For now we've got no rules.
+`rule_files`配置区域中配置了所有我们希望Prometheus Server需要加载的规则的地址。不过到目前为止，我们还没有配置任何规则。
 
-The last block, `scrape_configs`, controls what resources Prometheus monitors. Since Prometheus also exposes data about itself as an HTTP endpoint it can scrape and monitor its own health. In the default configuration there is a single job, called `prometheus`, which scrapes the time series data exposed by the Prometheus server. The job contains a single, statically configured, target, the `localhost` on port `9090`. Prometheus expects metrics to be available on targets on a path of `/metrics`. So this default job is scraping via the URL: http://localhost:9090/metrics.
+最后的`scrape_configs`配置区域控制Prometheus需要监控的资源信息。因为Prometheus也将自己的数据通过HTTP接口暴露出来，因此它也可以抓取并监控自己的健康状况。在默认的配置中，只有一个job_name为 `prometheus` 的任务，它负责抓取Prometheus Server自身的时序数据，这个任务只包含一个单一的、静态配置的目标，那就是本地`localhost`的`9090`端口。Prometheus期望可以从服务的 `/metrics` 路径上获取可用的监控指标，因此默认的任务收集的URL地址为： http://localhost:9090/metrics 。
 
-The time series data returned will detail the state and performance of the Prometheus server.
+返回的时间序列数据将详细说明Prometheus Server的状态和性能。
 
-For a complete specification of configuration options, see the
-[configuration documentation](/docs/operating/configuration).
+有关配置选项的完整说明，见[配置文档](/docs_cn/operating/configuration).
 
 ## 启动 Prometheus
 
-To start Prometheus with our newly created configuration file, change to the directory containing the Prometheus binary and run:
+进入 `prometheus` 可执行文件的目录，使用我们刚刚创建的配置文件来启动Prometheus，运行如下命令：
 
 ```language-bash
 ./prometheus --config.file=prometheus.yml
 ```
 
-Prometheus should start up. You should also be able to browse to a status page about itself at http://localhost:9090. Give it about 30 seconds to collect data about itself from its own HTTP metrics endpoint.
+Prometheus应该已经启动完成了。你可以通过浏览 http://localhost:9090 查看关于它自己健康情况的状态页面，30s之后就可以看到它从自己的HTTP监控指标接口中收集到的数据了。
 
-You can also verify that Prometheus is serving metrics about itself by
-navigating to its own metrics endpoint: http://localhost:9090/metrics.
+你也可以访问Prometheus自身的指标路径：http://localhost:9090/metrics，从而来验证Prometheus是在收集它自身的监控指标。
 
-## Using the expression browser
+## 使用表达式浏览器
 
-Let us try looking at some data that Prometheus has collected about itself. To
-use Prometheus's built-in expression browser, navigate to
-http://localhost:9090/graph and choose the "Console" view within the "Graph"
-tab.
+我们试着查看一些Prometheus服务自身产生的数据。要使用Prometheus内置的表达式浏览器，需要在浏览器输入 http://localhost:9090/graph 地址, 并选择"Graph"标签页中的"Console"视图。
 
-As you can gather from http://localhost:9090/metrics, one metric that
-Prometheus exports about itself is called
-`http_requests_total` (the total number of HTTP requests the Prometheus server has made). Go ahead and enter this into the expression console:
+如果你可以从 http://localhost:9090/metrics 路径查看到收集的指标数据，Prometheus自身的监控指标中有一个叫做 `http_requests_total` (Prometheus server收到的HTTP请求的总数)，继续并将其输入到表达式Console中：
 
 ```
 http_requests_total
