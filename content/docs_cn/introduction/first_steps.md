@@ -5,17 +5,17 @@ sort_rank: 3
 
 # Prometheus 入门
 
-欢迎使用Prometheus！Prometheus是一个监控平台，它通过被监控目标对外暴露的HTTP接口来抓取相关的数据指标。这篇入门文章会告诉你如何安装和配置Prometheus来监控你的第一个集群资源。你将会下载、安装和运行Prometheus，以及下载和安装一个 exporter， exporter是一个用于暴露主机或服务时序数据的工具。这里使用的第一个exporter是Node Exporter，它是用于提供主机级别的相关指标，比如CPU、内存以及磁盘等信息。
+欢迎使用Prometheus！Prometheus是一个监控平台，它通过从监控目标对外暴露的HTTP接口来抓取相关的数据指标。这篇入门文章会告诉你如何安装和配置Prometheus来监控你的第一个集群资源。你将会知道如何下载、安装和运行Prometheus，以及下载和安装一个 exporter， exporter是一个用于暴露主机或服务时序数据的工具。这里使用的第一个exporter是Node Exporter，它是用于提供主机级别的相关指标，比如CPU、内存以及磁盘等信息。
 
 ## 下载 Prometheus
 
-你可以点击这里下载相关对应平台[最新版本](/download) 的Prometheus, 然后解压它：
+你可以点击这里下载相关对应平台[最新版本](/download)的Prometheus，并进行解压缩：
 
 ```language-bash
 tar xvfz prometheus-*.tar.gz
 cd prometheus-*
 ```
-Prometheus Server是一个单独命名为 `prometheus` 的二进制文件 (在Microsoft Windows上命名为`prometheus.exe`). 你可以使用 `--help` 参数运行这个二进制文件来查看相关的使用帮助。
+Prometheus Server是一个命名为 `prometheus` 的二进制文件 (在Microsoft Windows上命名为`prometheus.exe`). 你可以使用 `--help` 参数运行这个二进制文件来查看相关的使用帮助。
 
 ```language-bash
 ./prometheus --help
@@ -30,7 +30,7 @@ The Prometheus monitoring server
 
 ## 配置 Prometheus
 
-Prometheus使用[YAML](http://www.yaml.org/start.html)语法进行配置。下载Prometheus之后会在压缩包中发现一个叫做 `prometheus.yml` 的样例配置文件，我们可以从它开始进行配置。
+Prometheus使用[YAML](http://www.yaml.org/start.html)语法进行配置。下载Prometheus压缩包并解压之后会发现一个叫做 `prometheus.yml` 的样例配置文件，我们可以从它开始进行配置。
 
 我们已经删除了示例文件中的大部分注释（以`#`为前缀的行为注释），以使其更加简洁。
 
@@ -53,9 +53,9 @@ scrape_configs:
 
 `global` 配置区域控制Prometheus server的全局配置，当前支持两个选项。第一个是 `scrape_interval`, 该选项控制Prometheus抓取所有目标数据的频率，当然你也可以为具体的目标单独配置。在上面的样例中，我们设置的全局抓取数据的时间间隔为15秒。`evaluation_interval` 选项是用来控制Prometheus计算规则的时间间隔，Prometheus使用相关的规则`rules`来创建新的时序数据以及生成报警。
 
-`rule_files`配置区域中配置了所有我们希望Prometheus Server需要加载的规则的地址。不过到目前为止，我们还没有配置任何规则。
+`rule_files`配置区域中配置了所有我们希望Prometheus Server所要加载的规则地址。不过到目前为止，我们还没有配置任何规则。
 
-最后的`scrape_configs`配置区域控制Prometheus需要监控的资源信息。因为Prometheus也将自己的数据通过HTTP接口暴露出来，因此它也可以抓取并监控自己的健康状况。在默认的配置中，只有一个job_name为 `prometheus` 的任务，它负责抓取Prometheus Server自身的时序数据，这个任务只包含一个单一的、静态配置的目标，那就是本地`localhost`的`9090`端口。Prometheus期望可以从服务的 `/metrics` 路径上获取可用的监控指标，因此默认的任务收集的URL地址为： http://localhost:9090/metrics 。
+最后的`scrape_configs`配置区域控制Prometheus所要监控的资源信息。因为Prometheus也将自己的数据通过HTTP接口暴露出来，因此它也可以抓取并监控自己的健康状况。在默认的配置中，只有一个job_name为 `prometheus` 的任务，它负责抓取Prometheus Server自身的时序数据，这个任务只包含一个单一的、静态配置的目标，那就是本地`localhost`的`9090`端口。Prometheus期望可以从服务的 `/metrics` 路径上获取可用的监控指标，因此默认的数据收集的URL地址为： http://localhost:9090/metrics 。
 
 返回的时间序列数据将详细说明Prometheus Server的状态和性能。
 
@@ -71,7 +71,7 @@ scrape_configs:
 
 Prometheus应该已经启动完成了。你可以通过浏览 http://localhost:9090 查看关于它自己健康情况的状态页面，30s之后就可以看到它从自己的HTTP监控指标接口中收集到的数据了。
 
-你也可以访问Prometheus自身的指标路径：http://localhost:9090/metrics，从而来验证Prometheus是在收集它自身的监控指标。
+你也可以访问Prometheus自身的监控指标路径：http://localhost:9090/metrics，从而来验证Prometheus是在收集它自身的监控指标。
 
 ## 使用表达式浏览器
 
