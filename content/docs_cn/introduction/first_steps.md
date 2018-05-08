@@ -22,7 +22,6 @@ Prometheus Server是一个命名为 `prometheus` 的二进制文件 (在Microsof
 usage: prometheus [<flags>]
 
 The Prometheus monitoring server
-
 . . .
 ```
 
@@ -55,7 +54,7 @@ scrape_configs:
 
 `rule_files`配置区域中配置了所有我们希望Prometheus Server所要加载的规则地址。不过到目前为止，我们还没有配置任何规则。
 
-最后的`scrape_configs`配置区域控制Prometheus所要监控的资源信息。因为Prometheus也将自己的数据通过HTTP接口暴露出来，因此它也可以抓取并监控自己的健康状况。在默认的配置中，只有一个job_name为 `prometheus` 的任务，它负责抓取Prometheus Server自身的时序数据，这个任务只包含一个单一的、静态配置的目标，那就是本地`localhost`的`9090`端口。Prometheus期望可以从服务的 `/metrics` 路径上获取可用的监控指标，因此默认的数据收集的URL地址为： http://localhost:9090/metrics 。
+最后的`scrape_configs`配置区域控制Prometheus所要监控的资源信息。因为Prometheus也将自己的数据通过HTTP接口暴露出来，因此它也可以抓取并监控自己的健康状况。在默认的配置中，只有一个job name为 `prometheus` 的任务，它负责抓取Prometheus Server自身的时序数据，这个任务只包含一个单一的、静态配置的目标，那就是本地`localhost`的`9090`端口。Prometheus期望可以从服务的 `/metrics` 路径上获取可用的监控指标，因此默认的数据收集的URL地址为： http://localhost:9090/metrics 。
 
 返回的时间序列数据将详细说明Prometheus Server的状态和性能。
 
@@ -71,7 +70,7 @@ scrape_configs:
 
 Prometheus应该已经启动完成了。你可以通过浏览 http://localhost:9090 查看关于它自己健康情况的状态页面，30s之后就可以看到它从自己的HTTP监控指标接口中收集到的数据了。
 
-你也可以访问Prometheus自身的监控指标路径：http://localhost:9090/metrics，从而来验证Prometheus是在收集它自身的监控指标。
+你也可以访问Prometheus的监控路径 http://localhost:9090/metrics 来验证Prometheus是在收集它自身的监控指标。
 
 ## 使用表达式浏览器
 
