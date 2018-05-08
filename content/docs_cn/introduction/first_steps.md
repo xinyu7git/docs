@@ -83,36 +83,35 @@ Prometheus应该已经启动完成了。你可以通过浏览 http://localhost:9
 http_requests_total
 ```
 
-This should return a number of different time series (along with the latest value recorded for each), all with the metric name `http_requests_total`, but with different labels. These labels designate different types of requests.
+这应该会返回许多不同的时序数据（以及每个时序数据的最新数值），所有的数据有相同的metric名称 `http_requests_total` ，但是标签各不相同，而这些标签则代表了不同类型的请求。
 
-If we were only interested in requests that resulted in HTTP code `200`, we could use this query to retrieve that information:
+如果我们仅仅对HTTP状态码是 `200` 的请求结果感兴趣，我们可以使用下面的查询语句来获取相关的数据信息：
 
 ```
 http_requests_total{code="200"}
 ```
 
-To count the number of returned time series, you could write:
+如果想知道时序数据的个数，你可以这样写：
 
 ```
 count(http_requests_total)
 ```
 
-For more about the expression language, see the
-[expression language documentation](/docs/querying/basics/).
+有关表达式语言的更详细说明，见[表达式语言文档](/docs_cn/querying/basics/).
 
-## Using the graphing interface
+## 使用图形界面
 
-To graph expressions, navigate to http://localhost:9090/graph and use the "Graph" tab.
+要使用图形界面，需要跳转到 http://localhost:9090/graph 页面并选择 "Graph" 标签页。
 
-For example, enter the following expression to graph the per-second HTTP request rate happening in the self-scraped Prometheus:
+例如，输入下面的表达式来绘制Prometheus自身的每秒HTTP请求率：
 
 ```
 rate(http_requests_total[1m])
 ```
 
-You can experiment with the graph range parameters and other settings.
+你可以尝试修改graph图形界面中的range参数或者其他设置。
 
-## Installing the Node Exporter
+## 安装Node Exporter
 
 Collecting metrics from Prometheus alone is not a good representation of Prometheus' capabilities. So let's use the Node Exporter to monitor our first resource. We're going to monitor the local Linux host that the Prometheus server is running on but you could monitor any Linux or OS X host. There's also [a WMI exporter](https://github.com/martinlindhe/wmi_exporter) for Microsoft Windows hosts too.
 
