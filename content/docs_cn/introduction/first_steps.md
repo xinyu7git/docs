@@ -112,32 +112,32 @@ rate(http_requests_total[1m])
 
 ## 安装Node Exporter
 
-Collecting metrics from Prometheus alone is not a good representation of Prometheus' capabilities. So let's use the Node Exporter to monitor our first resource. We're going to monitor the local Linux host that the Prometheus server is running on but you could monitor any Linux or OS X host. There's also [a WMI exporter](https://github.com/martinlindhe/wmi_exporter) for Microsoft Windows hosts too.
+仅仅搜集Prometheus Server本身的监控指标并不能很好的代表Prometheus的能力，因此，我们使用Node Exporter来监控我们的第一个资源。我们将会监控运行Prometheus Server的本地Linux服务器，不过你可以监控任何Linux或者OS X服务器。如果你想监控微软Windows服务器，可以使用[WMI exporter](https://github.com/martinlindhe/wmi_exporter)。
 
-[Download the latest release of the Node Exporter](/download/#node_exporter) of Prometheus for your platform, then extract it:
+请针对不同的操作系统[下载最新版本的Node Exporter](/download/#node_exporter), 然后进行解压缩：
 
 ```language-bash
 tar xvfz node_exporter-*.tar.gz
 cd node_exporter-*
 ```
 
-The Node Exporter is a single binary, `node_exporter`, and has a configurable set of collectors for gathering various types of host-based metrics. By default, collectors gather [CPU, memory, disk, and other metrics](https://github.com/prometheus/node_exporter#enabled-by-default) and expose them for scraping.
+Node Exporter是一个叫做`node_exporter`的单独的二进制文件，它包含一组可配置的搜集器，可用于搜集各种类型的基于主机的监控指标。默认情况下，搜集器会搜集 [CPU, 内存， 磁盘和其他指标](https://github.com/prometheus/node_exporter#enabled-by-default) 并将它采集到的数据暴露出来。
 
-Let's start the Node Exporter now on our Linux host.
+现在在我们的Linux服务器上启动Node Exporter。
 
 ```language-bash
 ./node_exporter
 ```
 
-The Node Exporter's metrics are available on port `9100` on the host at the `/metrics` path. In our case this is: http://localhost:9100/metrics.
+Node Exporter服务的指标可以通过 `/metrics` 路径在服务器上的 `9100` 端口上获得。在我们的示例中，它对应的服务地址为：http://localhost:9100/metrics.
 
-You can browse to this URL to see the metrics being exposed.
+你可以在浏览器中打开上面的URL来查看Node Exporter暴露的监控指标。
 
-We now need to tell Prometheus about our new exporter.
+现在，我们需要告诉Prometheus这个新的exporter在哪里。
 
-## Configuring Prometheus to monitor the host
+## 配置Prometheus来监控主机
 
-We will configure Prometheus to scrape this new target. To achieve this, add a new job definition to the `scrape_configs` section in our `prometheus.yml`:
+我们将会配置Prometheus来抓取新的目标。为了达到这个目的，需要在 `prometheus.yml` 配置文件的 `scrape_configs` 配置段中添加一个新的任务描述。
 
 ```
 - job_name: node
@@ -145,16 +145,14 @@ We will configure Prometheus to scrape this new target. To achieve this, add a n
       - targets: ['localhost:9100']
 ```
 
-Our new job is called `node`. It scrapes a static target, `localhost` on port `9100`. You would replace this name with the name or IP address of the host you're monitoring. 
+新的任务名称为 `node` ，它抓取一个静态的目标， `localhost` 的 `9100` 端口，你可以将此名称替换为您正在监控的主机的名称或IP地址。
 
-Now we restart our Prometheus server to activate our new job.
+现在，我们重启Prometheus Server来激活新的任务。
 
-Go to the expression browser and verify that Prometheus now has information
-about the time series that this endpoint exposes. Navigate to
-http://localhost:9090/graph and use the dropdown next to the "Execute" button to see a list of metrics this server is collecting. In the list you'll see a number of metrics prefixed with `node_`, that have been collected by the Node Exporter by our `node` job. For example, you can see the node's CPU usage via the `node_cpu` metric. 
+现在，去表达式浏览器来验证Prometheus现在已经采集到这个节点暴露的时间序列数据。在浏览器中打开 http://localhost:9090/graph 地址，使用 "Execute" 按钮旁边的下拉菜单查看该服务器正在收集的指标列表。在列表中，你会看到以 `node_` 为前缀的多个指标，这些指标是通过我们定义的 `node` 任务，从Node Exporter中采集的。例如，你可以通过 `node_cpu` 指标查看节点的CPU使用情况。
 
-One useful metric to look for is the `up` metric. The `up` metric can be used to track the status of the target. If the metric has a value of `1` then the scrape of the target was successful, if `0` it failed. This can help give you an indication of the status of the target. You'll see two `up` metrics, one for each target we're scraping: the Prometheus server and the Node Exporter.
+一个有用的指标是 `up` 指标， `up` 指标可以用来跟踪目标的状态。 如果这个指标的值为 `1` 则表示该目标的指标采集是成功的，如果是 `0`，则表示采集失败，这种方式可以帮助我们了解目标的状态情况。现在，你可以看到两个 `up` 指标，一个代表的是Prometheus Server，另一个代表的是Node Exporter。
 
-## Summary
+## 总结
 
-Now you've been introduced to Prometheus, installed it, and configured it to monitor your first resources. We've also installed our first exporter and seen the basics of how to work with time series data scraped using the expression browser. You can find more [documentation](/docs/introduction/overview/) and [guides](/docs/guides/) to help you continue to learn more about Prometheus. 
+现在你已经入门了Prometheus，了解了如何安装以及配置它来监控你的第一个资源。我们还安装了我们的第一个exporter，并通过使用表达式浏览器了解了时间序列数据被采集的基本原理。你可以查看更多的 [文档][documentation](/docs_cn/introduction/overview/) 和 [向导](/docs_cn/guides/) 来帮助你进一步了解Prometheus。
