@@ -1,48 +1,31 @@
 ---
-title: Comparison to alternatives
+title: 与其他同类产品的比较
 sort_rank: 4
 ---
 
-# Comparison to alternatives
+# 与其他同类产品的比较
 
 ## Prometheus vs. Graphite
 
-### Scope
+### 工作范围
 
-[Graphite](http://graphite.readthedocs.org/en/latest/) focuses on being a
-passive time series database with a query language and graphing features. Any
-other concerns are addressed by external components.
+[Graphite](http://graphite.readthedocs.org/en/latest/) 专注于成为一个被动时间序列数据库，具有查询语言和绘图功能，其他的任何问题都是由外部组件解决。
 
-Prometheus is a full monitoring and trending system that includes built-in and
-active scraping, storing, querying, graphing, and alerting based on time series
-data. It has knowledge about what the world should look like (which endpoints
-should exist, what time series patterns mean trouble, etc.), and actively tries
-to find faults.
+Prometheus是一个具有监控和趋势分析功能的完整的监控生态系统，它基于时序数据进行采集、存储、查询、绘图和报警等一些列功能。它知道整个世界该有的样子（它知道该监控哪些数据端点，知道哪些时序数据意味着出现了故障），从而积极的尝试着找到哪里出现了问题。
+、
+### 数据模型
 
-### Data model
+Graphite存储指定时间序列的数字样本，跟Prometheus很像，但Prometheus的元数据模型更为丰富：Graphite的指标名称是使用点号(.)将各个明确的含义连接起来，而Prometheus是通过对指标名称添加叫做标签的键值对来表示这些含义。这样就可以很容易通过查询语言对这些标签进行过滤、分组和匹配，
 
-Graphite stores numeric samples for named time series, much like Prometheus
-does. However, Prometheus's metadata model is richer: while Graphite metric
-names consist of dot-separated components which implicitly encode dimensions,
-Prometheus encodes dimensions explicitly as key-value pairs, called labels, attached
-to a metric name. This allows easy filtering, grouping, and matching by these
-labels via the query language.
+此外，特别是将Graphite和StatsD结合使用的时候，通常情况下只能存储所有被监控实例的聚合后的数据，而不是将实例作为一个维度保留下来而且能够深入到个别问题实例中。
 
-Further, especially when Graphite is used in combination with
-[StatsD](https://github.com/etsy/statsd/), it is common to store only
-aggregated data over all monitored instances, rather than preserving the
-instance as a dimension and being able to drill down into individual
-problematic instances.
-
-For example, storing the number of HTTP requests to API servers with the
-response code `500` and the method `POST` to the `/tracks` endpoint would
-commonly be encoded like this in Graphite/StatsD:
+举个例子，在Grahpite/StatsD 中存储某个API服务器的HTTP请求中 `/tracks` 路径的 `POST`方法中返回码为 `500` 的指标名称会被编码成下面的格式：
 
 ```
 stats.api-server.tracks.post.500 -> 93
 ```
 
-In Prometheus the same data could be encoded like this (assuming three api-server instances):
+而在Prometheus中，相同的数据则会被编码成这样（假设有3个api-server实例）：
 
 ```
 api_server_http_requests_total{method="POST",handler="/tracks",status="500",instance="<sample1>"} -> 34
