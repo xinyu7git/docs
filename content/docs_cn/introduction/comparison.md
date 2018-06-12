@@ -33,47 +33,30 @@ api_server_http_requests_total{method="POST",handler="/tracks",status="500",inst
 api_server_http_requests_total{method="POST",handler="/tracks",status="500",instance="<sample3>"} -> 31
 ```
 
-### Storage
+### 存储
 
-Graphite stores time series data on local disk in the
-[Whisper](http://graphite.readthedocs.org/en/latest/whisper.html) format, an
-RRD-style database that expects samples to arrive at regular intervals. Every
-time series is stored in a separate file, and new samples overwrite old ones
-after a certain amount of time.
+Graphite将时序数据使用[Whisper](http://graphite.readthedocs.org/en/latest/whisper.html)格式存储在本地磁盘上， 它是一种RRD风格的数据库，期望能够在固定的时间间隔内获取采样数据。所有的时序数据会被存储在一个单独的文件中，并且经过一段时间后，新的采样数据会覆盖之前旧的采样数据。
 
-Prometheus also creates one local file per time series, but allows storing
-samples at arbitrary intervals as scrapes or rule evaluations occur. Since new
-samples are simply appended, old data may be kept arbitrarily long. Prometheus
-also works well for many short-lived, frequently changing sets of time series.
+Prometheus也是将时序数据存在一个本地文件中，但是允许以任意的时间间隔存储采样数据，无论是进行数据采集还是规则验证。因为最新的采样数据是通过简单的追加方式，因此旧的数据也可以保存任意长的时间。Prometheus也适用于许多短暂的、频繁变化的时序数据集合。
 
-### Summary
+### 总结
 
-Prometheus offers a richer data model and query language, in addition to being
-easier to run and integrate into your environment. If you want a clustered
-solution that can hold historical data long term, Graphite may be a better
-choice.
-
+除了更容易运行和集成到您现有的环境中， Prometheus还提供丰富的数据模型和查询语言。如果你想要一个集群式的可以保存长期历史数据的解决方案，Graphite可能是一个更好的选择。
 
 ## Prometheus vs. InfluxDB
 
-[InfluxDB](https://influxdata.com/) is an open-source time series database,
-with a commercial option for scaling and clustering. The InfluxDB project was
-released almost a year after Prometheus development began, so we were unable to
-consider it as an alternative at the time. Still, there are significant
-differences between Prometheus and InfluxDB, and both systems are geared
-towards slightly different use cases.
+[InfluxDB](https://influxdata.com/) 是一个开源的时序数据库，商业版本具有可扩展和集群功能。InfluxDB项目是在Prometheus开始开发的一年后发布的，所以我们没有考虑把它当作当时的替代品。尽管如此，Prometheus与InfluxDB之间仍有很大差异，并且这两种系统都适用于略有不同的使用场景。
 
-### Scope
+### 工作范围
 
-For a fair comparison, we must also consider
-[Kapacitor](https://github.com/influxdata/kapacitor) together with InfluxDB, as
-in combination they address the same problem space as Prometheus and the
-Alertmanager.
+为了公平比较，我们必须将 [Kapacitor](https://github.com/influxdata/kapacitor) 与InfluxDB作为整体一起考虑，它们组合在一起解决了Prometheus和Alertmanager组合所解决的相同的问题。
 
 The same scope differences as in the case of
 [Graphite](#prometheus-vs-graphite) apply here for InfluxDB itself. In addition
 InfluxDB offers continuous queries, which are equivalent to Prometheus
 recording rules.
+
+上文中讲到的Prometheus与[Graphite](#prometheus-vs-graphite)的工作范围差异也同样适用于InfluxDB。另外InfluxDB提供了连续查询功能，这等同于Prometheus的recording rules。？
 
 Kapacitor’s scope is a combination of Prometheus recording rules, alerting
 rules, and the Alertmanager's notification functionality. Prometheus offers [a
