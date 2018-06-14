@@ -51,99 +51,59 @@ Prometheus也是将时序数据存在一个本地文件中，但是允许以任�
 
 为了公平比较，我们必须将 [Kapacitor](https://github.com/influxdata/kapacitor) 与InfluxDB作为整体一起考虑，它们组合在一起解决了Prometheus和Alertmanager组合所解决的相同的问题。
 
-The same scope differences as in the case of
-[Graphite](#prometheus-vs-graphite) apply here for InfluxDB itself. In addition
-InfluxDB offers continuous queries, which are equivalent to Prometheus
-recording rules.
+上文中讲到的Prometheus与[Graphite](#prometheus-vs-graphite)的工作范围差异也同样适用于InfluxDB。另外InfluxDB提供了连续查询功能，这等同于Prometheus的记录规则。
 
-上文中讲到的Prometheus与[Graphite](#prometheus-vs-graphite)的工作范围差异也同样适用于InfluxDB。另外InfluxDB提供了连续查询功能，这等同于Prometheus的recording rules。？
+Kapacitor的工作范围包含了Prometheus的记录规则，报警规则和Alertmanager的通知功能。Prometheus为绘图和报警提供了[一个更强大的查询语言](https://www.robustperception.io/translating-between-monitoring-languages/). Prometheus的Alertmanager还提供报警分组、报警收敛去重和报警屏蔽的功能。
 
-Kapacitor’s scope is a combination of Prometheus recording rules, alerting
-rules, and the Alertmanager's notification functionality. Prometheus offers [a
-more powerful query language for graphing and
-alerting](https://www.robustperception.io/translating-between-monitoring-languages/).
-The Prometheus Alertmanager additionally offers grouping, deduplication and
-silencing functionality.
 
-### Data model / storage
+### 数据模型 / 存储
 
-Like Prometheus, the InfluxDB data model has key-value pairs as labels, which
-are called tags. In addition, InfluxDB has a second level of labels called
-fields, which are more limited in use. InfluxDB supports timestamps with up to
-nanosecond resolution, and float64, int64, bool, and string data types.
-Prometheus, by contrast, supports the float64 data type with limited support for
-strings, and millisecond resolution timestamps.
+跟Prometheus类似，InfluxDB的数据模型也是使用key-value键值对作为标签（Prometheus中的labels)，在InfluxDB中被叫做tags。此外，InfluxDB中还有一个被称为字段（field）的二级标签，它在使用场景上更受限。InfluxDB支持最高达纳秒级分辨率的时间戳，以及float64，int64，bool和string数据类型。相比之下，Prometheus的float64的数据类型只能支持有限的字符串类型和毫秒分辨率的时间戳。
 
-InfluxDB uses a variant of a [log-structured merge tree for storage with a write ahead log](https://docs.influxdata.com/influxdb/v1.2/concepts/storage_engine/),
-sharded by time. This is much more suitable to event logging than Prometheus's
-append-only file per time series approach.
+InfluxDB使用[日志结构合并树](https://docs.influxdata.com/influxdb/v1.2/concepts/storage_engine/)的变体进行存储，并提前写入日志。 这比Prometheus将时序数据追加到文件的方式。更适合于事件日志（event logging）。
 
-[Logs and Metrics and Graphs, Oh My!](https://blog.raintank.io/logs-and-metrics-and-graphs-oh-my/)
-describes the differences between event logging and metrics recording.
+[Logs and Metrics and Graphs, Oh My!](https://blog.raintank.io/logs-and-metrics-and-graphs-oh-my/) 这篇文章描述了事件日志和指标记录的区别。
 
-### Architecture
+### 架构
 
-Prometheus servers run independently of each other and only rely on their local
-storage for their core functionality: scraping, rule processing, and alerting.
-The open source version of InfluxDB is similar.
+Prometheus Server彼此独立运行，只依靠其本地存储实现其核心功能：数据采集，规则处理和报警，和InfluxDB的开源版本类似。
 
-The commercial InfluxDB offering is, by design, a distributed storage cluster
-with storage and queries being handled by many nodes at once.
+商业版本的InfluxDB产品在设计上是一个分布式存储集群，一次的存储和查询是由多个节点处理。
 
-This means that the commercial InfluxDB will be easier to scale horizontally,
-but it also means that you have to manage the complexity of a distributed
-storage system from the beginning. Prometheus will be simpler to run, but at
-some point you will need to shard servers explicitly along scalability
-boundaries like products, services, datacenters, or similar aspects.
-Independent servers (which can be run redundantly in parallel) may also give
-you better reliability and failure isolation.
+这意味着商业版本的InfluxDB将更容易水平扩展，这也意味着您必须从一开始就要管理一个复杂的分布式存储系统。Prometheus更简单的运行，但是要求使用者在某些时候，需要明确地沿着可扩展性边界（如产品，服务，数据中心或类似方面）分割Server。独立的Server（可以冗余部署）也可以为使用者提供更好的可靠性和故障隔离。
 
-Kapacitor's open-source release has no built-in distributed/redundant options for 
-rules,  alerting, or notifications.  The open-source release of Kapacitor can 
-be scaled via manual sharding by the user, similar to Prometheus itself.
-Influx offers [Enterprise Kapacitor](https://docs.influxdata.com/enterprise_kapacitor), which supports an 
-HA/redundant alerting system.
+Kapacitor的开源版没有为规则，报警或通知内置分布式/冗余的选择能力。Kapacitor的开源版本可以通过用户的手动分片进行扩展，类似Prometheus。Influx 提供了[企业版本的Kapacitor](https://docs.influxdata.com/enterprise_kapacitor), 是一个具有高可用冗余能力的报警系统。
 
-Prometheus and the Alertmanager by contrast offer a fully open-source redundant 
-option via running redundant replicas of Prometheus and using the Alertmanager's 
-[High Availability](https://github.com/prometheus/alertmanager#high-availability)
-mode. 
+相比之下，Prometheus和Alertmanager通过运行多分片的Prometheus Server以及Alertmanager的[高可用模式](https://github.com/prometheus/alertmanager#high-availability) ，提供了一个完整的开源冗余方案。
 
-### Summary
+### 总结
 
-There are many similarities between the systems. Both have labels (called tags
-in InfluxDB) to efficiently support multi-dimensional metrics. Both use
-basically the same data compression algorithms. Both have extensive
-integrations, including with each other. Both have hooks allowing you to extend
-them further, such as analyzing data in statistical tools or performing
-automated actions.
+两个系统之间有很多的相似之处：两者都使用标签（Prometheus中叫做labels，influxDB中叫做tags）来有效的支持多维度的指标。两者都使用
+基本上是相同的数据压缩算法。两者都有广泛的整合，包括它们相互之间。两者都有hooks能力，可以让使用者进一步扩展它们，如使用统计工具分析数据或执行一些自动化操作。
 
-Where InfluxDB is better:
+InfluxDB的优势：
 
-  * If you're doing event logging.
-  * Commercial option offers clustering for InfluxDB, which is also better for long term data storage.
-  * Eventually consistent view of data between replicas.
+  * 更适合事件日志（event logging）
+  * 商业版本为InfluxDB提供了集群能力，对于长期的数据存储来说更合适
+  * 多个复制分片之间的数据会保证最终一致性
 
-Where Prometheus is better:
+Prometheus的优势：
 
-  * If you're primarily doing metrics.
-  * More powerful query language, alerting, and notification functionality.
-  * Higher availability and uptime for graphing and alerting.
+  * 更适合指标记录（metric recording)
+  * 更强大的查询语言、报警和通知能力
+  * 绘图和报警的可用性和正常运行时间更高。
 
-InfluxDB is maintained by a single commercial company following the open-core
-model, offering premium features like closed-source clustering, hosting and
-support. Prometheus is a [fully open source and independent project](/community/), maintained
-by a number of companies and individuals, some of whom also offer commercial services and support.
+InfluxDB由一家遵循开放核心（open-core，和open-source有所不同）模式的商业公司维护，它们还提供商业化（闭源）的集群版本，服务托管和技术支持。而Prometheus是一个[完全开源和独立的项目](/community/)，它由许多公司和个人维护，其中还有一些（人或公司）提供商业服务和技术支持。
 
 ## Prometheus vs. OpenTSDB
 
-[OpenTSDB](http://opentsdb.net/) is a distributed time series database based on
-[Hadoop](http://hadoop.apache.org/) and [HBase](http://hbase.apache.org/).
+[OpenTSDB](http://opentsdb.net/) 是一个基于[Hadoop](http://hadoop.apache.org/) 和 [HBase](http://hbase.apache.org/)的分布式时序数据库。
 
-### Scope
+### 工作范围
 
 The same scope differences as in the case of
 [Graphite](/docs/introduction/comparison/#prometheus-vs-graphite) apply here.
+它和Prometheus的工作范围区别同[Graphite](/docs/introduction/comparison/#prometheus-vs-graphite)与Prometheus相类似。
 
 ### Data model
 
