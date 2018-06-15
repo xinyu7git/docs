@@ -101,112 +101,83 @@ InfluxDB由一家遵循开放核心（open-core，和open-source有所不同）�
 
 ### 工作范围
 
-The same scope differences as in the case of
-[Graphite](/docs/introduction/comparison/#prometheus-vs-graphite) apply here.
-它和Prometheus的工作范围区别同[Graphite](/docs/introduction/comparison/#prometheus-vs-graphite)与Prometheus相类似。
+OpenTSDB和Prometheus的工作范围区别同[Graphite](/docs/introduction/comparison/#prometheus-vs-graphite) 类似。
 
-### Data model
+### 数据模型 ？ 
 
-OpenTSDB's data model is almost identical to Prometheus's: time series are
-identified by a set of arbitrary key-value pairs (OpenTSDB tags are
-Prometheus labels). All data for a metric is 
-[stored together](http://opentsdb.net/docs/build/html/user_guide/writing/index.html#time-series-cardinality),
-limiting the cardinality of metrics. There are minor differences though: Prometheus
-allows arbitrary characters in label values, while OpenTSDB is more restrictive. 
-OpenTSDB also lacks a full query language, only allowing simple aggregation and math via its API.
+OpenTSDB的数据模型与Prometheus的数据模型几乎完全相同： 时间序列由一组任意的键值对来标识 (OpenTSDB的tags就是Prometheus的labels)。一个指标的所有数据是[存储在一起](http://opentsdb.net/docs/build/html/user_guide/writing/index.html#time-series-cardinality), 指标的数目是被限制的。不过他们仍然有一些细微的差异：Prometheus允许标签中使用任意字符，而OpenTSDB更具限制性。OpenTSDB也缺乏完整的查询语言，只允许通过API进行简单的聚合和数学运算。
 
-### Storage
+### 存储
 
-[OpenTSDB](http://opentsdb.net/)'s storage is implemented on top of
-[Hadoop](http://hadoop.apache.org/) and [HBase](http://hbase.apache.org/). This
-means that it is easy to scale OpenTSDB horizontally, but you have to accept
-the overall complexity of running a Hadoop/HBase cluster from the beginning.
+[OpenTSDB](http://opentsdb.net/)的存储是基于[Hadoop](http://hadoop.apache.org/) 和 [HBase](http://hbase.apache.org/)之上实现的。这也意味着可以很容易的横向扩展OpenTSDB，但是使用者从一开始必须接受运行Hadoop/HBase集群的整体复杂性。
 
-Prometheus will be simpler to run initially, but will require explicit sharding
-once the capacity of a single node is exceeded.
+Prometheus一开始运行起来会更简单，但是一旦超过单个节点的容量将需要显式分片。
 
-### Summary
+### 总结
 
-Prometheus offers a much richer query language, can handle higher cardinality
-metrics, and forms part of a complete monitoring system. If you're already
-running Hadoop and value long term storage over these benefits, OpenTSDB is a
-good choice.
+Prometheus提供了更丰富的查询语言，可以处理更高数量的监控指标，并且提供了一整套的监控体系。如果您已经在运行Hadoop，并且重视监控数据的长期存储，那么OpenTSDB是一个不错的选择。
 
 ## Prometheus vs. Nagios
 
-[Nagios](https://www.nagios.org/) is a monitoring system that originated in the
-1990s as NetSaint.
+[Nagios]（https://www.nagios.org/）是一个起源于20世纪90年代的NetSaint的监控系统， 。
 
-### Scope
+### 工作范围 ？
 
-Nagios is primarily about alerting based on the exit codes of scripts. These are 
-called “checks”. There is silencing of individual alerts, however no grouping, 
-routing or deduplication.
+Nagios主要是基于脚本的退出码进行警报，在Nagios中被称为“checks”。Nagios具备单独的报警屏蔽功能，但没有报警分组、路由和去重收敛功能。
 
-There are a variety of plugins. For example, piping the few kilobytes of
-perfData plugins are allowed to return [to a time series database such as Graphite](https://github.com/shawn-sterling/graphios) or using NRPE to [run checks on remote machines](https://exchange.nagios.org/directory/Addons/Monitoring-Agents/NRPE--2D-Nagios-Remote-Plugin-Executor/details).
+Nagios有大量的插件，比如，允许管理几千字节的perfData插件 [将数据返回给一个时序数据库例如Graphite](https://github.com/shawn-sterling/graphios)  或者使用 NRPE [在远程服务器上运行检查脚本](https://exchange.nagios.org/directory/Addons/Monitoring-Agents/NRPE--2D-Nagios-Remote-Plugin-Executor/details).
 
-### Data model
+### 数据模型
 
-Nagios is host-based. Each host can have one or more services and each service
-can perform one check.
+Nagios是基于主机的，每一个主机有一个或多个服务，并且每个服务可以执行一个检查逻辑。
 
-There is no notion of labels or a query language.
+没有标签或查询语言的概念。
 
-### Storage
+### 存储
 
 Nagios has no storage per-se, beyond the current check state.
-There are plugins which can store data such as [for visualisation](https://docs.pnp4nagios.org/).
+Nagios本身没有存储，超出当前的检查状态。
 
-### Architecture
+不过有相关的插件可以存储数据，例如：[for visualisation](https://docs.pnp4nagios.org/).
 
-Nagios servers are standalone. All configuration of checks is via file.
+### 架构
 
-### Summary
+Nagios Server是独立架构，所有配置的检查都是通过文件实现。
 
-Nagios is suitable for basic monitoring of small and/or static systems where
-blackbox probing is sufficient.
+### 汇总
 
-If you want to do whitebox monitoring, or have a dynamic or cloud based
-environment, then Prometheus is a good choice.
+Nagios适用于对黑箱探测充分的小型和/或静态系统进行基本监控。
+
+如果你想做白盒监控，或者有一个动态或基于云的环境，那么Prometheus是一个不错的选择。
 
 ## Prometheus vs. Sensu
 
-[Sensu](https://sensuapp.org/) is broadly speaking a more modern Nagios.
+[Sensu]（https://sensuapp.org/）大体上说是更现代的Nagios。
 
-### Scope
+### 工作范围 ？
 
-The same general scope differences as in the case of
-[Nagios](/docs/introduction/comparison/#prometheus-vs-nagios) apply here.
+Sensu和Prometheus的工作范围差异与Nagios类似。
 
-The primary difference is that Sensu clients [register themselves](https://sensuapp.org/docs/0.27/reference/clients.html#what-is-a-sensu-client),
-and can determine the checks to run either from central or local configuration.
-Sensu does not have a limit on the amount of perfData.
+主要的区别在于，Sensu客户端会进行 [服务注册](https://sensuapp.org/docs/0.27/reference/clients.html#what-is-a-sensu-client), 并且可以明确是从中央配置或者是从本地配置运行的检查。Sensu对perfData的数量没有限制。
 
-There is also a [client socket](https://sensuapp.org/docs/0.27/reference/clients.html#what-is-the-sensu-client-socket) permitting arbitrary check results to be pushed into Sensu.
+还有一个[客户端套接字](https://sensuapp.org/docs/0.27/reference/clients.html#what-is-the-sensu-client-socket) 允许将任意检查结果推入Sensu。
 
-### Data model
+### 数据模型
 
-Sensu has the same rough data model as [Nagios](/docs/introduction/comparison/#prometheus-vs-nagios).
+Sensu 拥有与 Nagios 相同的粗略数据模型。
 
-### Storage
+### 存储
 
-Sensu has storage in Redis called stashes. These are used primarily for storing
-silences. It also stores all the clients that have registered with it.
+Sensu将数据存储在Redis，被称为stashes，它主要使用来存储报警屏蔽数据，当然也存储所有的已经注册的客户端信息。
 
-### Architecture
+### 架构
 
-Sensu has a [number of components](https://sensuapp.org/docs/0.27/overview/architecture.html). It uses
-RabbitMQ as a transport, Redis for current state, and a separate server for
-processing.
+Sensu有[很多组件](https://sensuapp.org/docs/0.27/overview/architecture.html), 它使用RabbitMQ作为传输通道，使用Redis存储当前状态，并使用单独的server处理请求。
 
-Both RabbitMQ and Redis can be clustered. Multiple copies of the server can be
-run for scaling and redundancy.
+RabbitMQ 和 Redis 都可以进行集群部署，server端服务可以运行多个副本进行扩展和冗余。
 
-### Summary
+### 总结
 
-If you have an existing Nagios setup that you wish to scale as-is, or want to 
-take advantage of the registration feature of Sensu, then Sensu is a good choice.
+如果你已经在使用Nagios服务并希望进行水平扩展，或想利用Sensu的注册功能，那Sensu是一个不错的选择。
 
-If you want to do whitebox monitoring, or have a very dynamic or cloud based
-environment, then Prometheus is a good choice.
+如果你想做白盒监控，或者有一个动态或基于云的环境，那么Prometheus是一个不错的选择。
