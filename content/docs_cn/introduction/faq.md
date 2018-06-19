@@ -4,59 +4,48 @@ sort_rank: 5
 toc: full-width
 ---
 
-# Frequently Asked Questions
+# FAQ（经常被问道的问题）
 
-## General
+## 通用
 
-### What is Prometheus?
+### 什么是Prometheus ?
 
-Prometheus is an open-source systems monitoring and alerting toolkit
-with an active ecosystem. See the [overview](/docs/introduction/overview/).
+Prometheus是一个具有活跃生态系统的开源的系统监控和报警工具包，可以查看[概述](/docs_cn/introduction/overview/) 页面了解更多信息。
 
-### How does Prometheus compare against other monitoring systems?
+### Prometheus其他监测系统进行的对比情况如何？
 
-See the [comparison](/docs/introduction/comparison/) page.
+查看[与其他同类产品的比较](/docs_cn/introduction/comparison/)页面了解更多信息。
 
-### What dependencies does Prometheus have?
+### Prometheus依赖哪些条件？
 
-The main Prometheus server runs standalone and has no external dependencies.
+Prometheus的主服务Server是可以独立运行的，并且不需要任何的外部依赖。
 
-### Can Prometheus be made highly available?
+### Prometheus可以保证高可用性吗？
 
-Yes, run identical Prometheus servers on two or more separate machines.
-Identical alerts will be deduplicated by the [Alertmanager](https://github.com/prometheus/alertmanager).
+是的，可以在两台或多台独立机器上运行相同的Prometheus Server，相同的报警会经过 [Alertmanager](https://github.com/prometheus/alertmanager) 进行去重。
 
-For [high availability of the Alertmanager](https://github.com/prometheus/alertmanager#high-availability),
-you can run multiple instances in a
-[Mesh cluster](https://github.com/weaveworks/mesh) and configure the Prometheus
-servers to send notifications to each of them.
+至于 [Alertmanager的高可用](https://github.com/prometheus/alertmanager#high-availability)，你可以在一个 [Mesh集群](https://github.com/weaveworks/mesh) 中运行多个Alertmanager实例，然后配置Prometheus将报警通知发给每一个实例。
 
 ### I was told Prometheus “doesn't scale”.
+### 我听说Prometheus是不能够扩展的。
 
-There are in fact various ways to scale and federate
-Prometheus. Read [Scaling and Federating Prometheus](https://www.robustperception.io/scaling-and-federating-prometheus/)
-on the Robust Perception blog to get started.
+实际上有很多种方式可以实现Prometheus的扩展和联合(federate)。 可以阅读Robust Perception的博客 [Prometheus的扩展和联合](https://www.robustperception.io/scaling-and-federating-prometheus/) 来进一步了解。
 
-### What language is Prometheus written in?
+### Prometheus是用什么语言开发的？
 
-Most Prometheus components are written in Go. Some are also written in Java,
-Python, and Ruby.
+大部分的Prometheus组件是使用Go语言开发的，当然也有一些是使用了Java，Python和Ruby。
 
-### How stable are Prometheus features, storage formats, and APIs?
+### Prometheus的各项功能、存储格式、API的稳定性如何？
 
-All repositories in the Prometheus GitHub organization that have reached
-version 1.0.0 broadly follow
-[semantic versioning](http://semver.org/). Breaking changes are indicated by
-increments of the major version. Exceptions are possible for experimental
-components, which are clearly marked as such in announcements.
-
-Even repositories that have not yet reached version 1.0.0 are, in general, quite
-stable. We aim for a proper release process and an eventual 1.0.0 release for
+Prometheus Github中所有已经达到1.0.0版本的代码库都是广泛遵循[语义版本控制](http://semver.org/)。重大的修改会表现在主版本的变化上。 实验组件可能有例外情况，这些情况在公告中会有明确的标记。
+ We aim for a proper release process and an eventual 1.0.0 release for
 each repository. In any case, breaking changes will be pointed out in release
 notes (marked by `[CHANGE]`) or communicated clearly for components that do not
 have formal releases yet.
 
-### Why do you pull rather than push?
+即使是尚未达到1.0.0版本的版本库，一般来说也相当稳定。
+
+### 为什么Prometheus采用Pull的机制而不是Push？
 
 Pulling over HTTP offers a number of advantages:
 
@@ -67,7 +56,7 @@ Pulling over HTTP offers a number of advantages:
 Overall, we believe that pulling is slightly better than pushing, but it should
 not be considered a major point when considering a monitoring system.
 
-For cases where you must push, we offer the [Pushgateway](/docs/instrumenting/pushing/).
+For cases where you must push, we offer the [Pushgateway](/docs_cn/instrumenting/pushing/).
 
 ### How to feed logs into Prometheus?
 
@@ -122,8 +111,8 @@ Currently, the following external systems are supported:
 
 ### Can I create dashboards?
 
-Yes, we recommend [Grafana](/docs/visualization/grafana/) for production
-usage. There are also [Console templates](/docs/visualization/consoles/).
+Yes, we recommend [Grafana](/docs_cn/visualization/grafana/) for production
+usage. There are also [Console templates](/docs_cn/visualization/consoles/).
 
 ### Can I change the timezone? Why is everything in UTC?
 
@@ -140,11 +129,11 @@ for the current state of this effort.
 ### Which languages have instrumentation libraries?
 
 There are a number of client libraries for instrumenting your services with
-Prometheus metrics. See the [client libraries](/docs/instrumenting/clientlibs/)
+Prometheus metrics. See the [client libraries](/docs_cn/instrumenting/clientlibs/)
 documentation for details.
 
 If you are interested in contributing a client library for a new language, see
-the [exposition formats](/docs/instrumenting/exposition_formats/).
+the [exposition formats](/docs_cn/instrumenting/exposition_formats/).
 
 ### Can I monitor machines?
 
@@ -160,13 +149,13 @@ monitoring of devices that support SNMP.
 
 ### Can I monitor batch jobs?
 
-Yes, using the [Pushgateway](/docs/instrumenting/pushing/). See also the
-[best practices](/docs/practices/instrumentation/#batch-jobs) for monitoring batch
+Yes, using the [Pushgateway](/docs_cn/instrumenting/pushing/). See also the
+[best practices](/docs_cn/practices/instrumentation/#batch-jobs) for monitoring batch
 jobs.
 
 ### What applications can Prometheus monitor out of the box?
 
-See [the list of exporters and integrations](/docs/instrumenting/exporters/).
+See [the list of exporters and integrations](/docs_cn/instrumenting/exporters/).
 
 ### Can I monitor JVM applications via JMX?
 
@@ -191,17 +180,17 @@ server crashes or is killed hard (e.g. OOM kill by the kernel or your runlevel
 system got impatient while waiting for Prometheus to shutdown), a crash
 recovery has to be performed, which should take less than a minute under normal
 circumstances, but can take quite long under certain circumstances. See
-[crash recovery](/docs/prometheus/1.8/storage/#crash-recovery) for details.
+[crash recovery](/docs_cn/prometheus/1.8/storage/#crash-recovery) for details.
 
 ### My Prometheus 1.x server runs out of memory.
 
-See [the section about memory usage](/docs/prometheus/1.8/storage/#memory-usage)
+See [the section about memory usage](/docs_cn/prometheus/1.8/storage/#memory-usage)
 to configure Prometheus for the amount of memory you have available.
 
 ### My Prometheus 1.x server reports to be in “rushed mode” or that “storage needs throttling”.
 
 Your storage is under heavy load. Read
-[the section about configuring the local storage](/docs/prometheus/1.8/storage/)
+[the section about configuring the local storage](/docs_cn/prometheus/1.8/storage/)
 to find out how you can tweak settings for better performance.
 
 ## Implementation
@@ -233,5 +222,5 @@ front of Prometheus. See, for example [Adding Basic Auth to Prometheus with
 Nginx](https://www.robustperception.io/adding-basic-auth-to-prometheus-with-nginx/).
 
 This applies only to inbound connections. Prometheus does support
-[scraping TLS- and auth-enabled targets](/docs/operating/configuration/#%3Cscrape_config%3E), and other
+[scraping TLS- and auth-enabled targets](/docs_cn/operating/configuration/#%3Cscrape_config%3E), and other
 Prometheus components that create outbound connections have similar support.
