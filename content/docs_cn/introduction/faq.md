@@ -38,68 +38,53 @@ Prometheus的主服务Server是可以独立运行的，并且不需要任何的�
 ### Prometheus的各项功能、存储格式、API的稳定性如何？
 
 Prometheus Github中所有已经达到1.0.0版本的代码库都是广泛遵循[语义版本控制](http://semver.org/)。重大的修改会表现在主版本的变化上。 实验组件可能有例外情况，这些情况在公告中会有明确的标记。
- We aim for a proper release process and an eventual 1.0.0 release for
-each repository. In any case, breaking changes will be pointed out in release
-notes (marked by `[CHANGE]`) or communicated clearly for components that do not
-have formal releases yet.
 
-即使是尚未达到1.0.0版本的版本库，一般来说也相当稳定。
+即使是尚未达到1.0.0版本的版本库，一般来说也相当稳定。我们旨在为每个存储库提供适当的发布流程和最终1.0.0版本。在任何情况下较大的代码变化都将会在发布说明文档中加以注明（使用 `[CHANGE]` 标识），也包括清楚地传达尚未正式发布的组件。
 
 ### 为什么Prometheus采用Pull的机制而不是Push？
 
-Pulling over HTTP offers a number of advantages:
+基于HTTP的拉取模式（Pull) 有很多优势：
 
-* You can run your monitoring on your laptop when developing changes.
-* You can more easily tell if a target is down.
-* You can manually go to a target and inspect its health with a web browser.
+* 在进行开发调试的时候你可以在自己的笔记本上运行监控。
+* 你可以更容易的判断目标是否停止服务。
+* 你可以通过浏览器检查目标的健康情况
 
-Overall, we believe that pulling is slightly better than pushing, but it should
-not be considered a major point when considering a monitoring system.
+总体而言，我们认为拉取略好于推送，但在考虑监测系统时不应将其视为重点。
 
-For cases where you must push, we offer the [Pushgateway](/docs_cn/instrumenting/pushing/).
+如果你有必须要通过Push方式来监控的场景，我们提供了 [Pushgateway](/docs_cn/instrumenting/pushing/) 来解决你的问题。
 
-### How to feed logs into Prometheus?
+### 如何将日志输入Prometheus？
 
-Short answer: Don't! Use something like the [ELK stack](https://www.elastic.co/products) instead.
+简短的回答：不要使用Prometheus！ 去使用类似 [ELK技术栈](https://www.elastic.co/products) 的方式来解决日志问题。
 
-Longer answer: Prometheus is a system to collect and process metrics, not an
-event logging system. The Raintank blog post
-[Logs and Metrics and Graphs, Oh My!](https://blog.raintank.io/logs-and-metrics-and-graphs-oh-my/)
-provides more details about the differences between logs and metrics.
+较长的回答：Prometheus是一个收集和处理指标的系统，而不是一个日志时间系统。Raintank的博客 [Logs and Metrics and Graphs, Oh My!](https://blog.raintank.io/logs-and-metrics-and-graphs-oh-my/) 中提供了更详细的关于日志和指标的区别。
 
-If you want to extract Prometheus metrics from application logs, Google's
-[mtail](https://github.com/google/mtail) might be helpful.
+如果你想从应用日志中解析出Prometheus需要的指标，Google的[mtail](https://github.com/google/mtail) 或许可以帮助你。
 
-### Who wrote Prometheus?
+### Prometheus是由谁开发的？
 
-Prometheus was initially started privately by
-[Matt T. Proud](http://www.matttproud.com) and
-[Julius Volz](http://juliusv.com). The majority of its
-initial development was sponsored by [SoundCloud](https://soundcloud.com).
+Prometheus项目最初是由 [Matt T. Proud](http://www.matttproud.com) 和 [Julius Volz](http://juliusv.com) 共同发起。其最初的开发大部分是由 [SoundCloud](https://soundcloud.com) 赞助。
 
-It's now maintained and extended by a wide range of companies and individuals.
+现在Prometheus由多个公司和个人进行维护和扩展。
 
-### What license is Prometheus released under?
+### Prometheus在那个协议下发布的？
 
-Prometheus is released under the
-[Apache 2.0](https://github.com/prometheus/prometheus/blob/master/LICENSE) license.
+Prometheus是在遵循 [Apache 2.0](https://github.com/prometheus/prometheus/blob/master/LICENSE) 协议下发布的。
 
 ### What is the plural of Prometheus?
+### Prometheus的复数写法是什么？
 
-After [extensive research](https://youtu.be/B_CDeYrqxjQ), it has been determined
-that the correct plural of 'Prometheus' is 'Prometheis'.
+在进行了[广泛研究](https://youtu.be/B_CDeYrqxjQ) 之后，已经确定 'Prometheus' 正确的复数写法是 'Prometheis'。
 
-### Can I reload Prometheus's configuration?
+### Prometheus 可以进行配置重载吗？
 
-Yes, sending `SIGHUP` to the Prometheus process or an HTTP POST request to the
-`/-/reload` endpoint will reload and apply the configuration file. The
-various components attempt to handle failing changes gracefully.
+是的，给Prometheus Server进程发送 `SIGHUP` 信号，或者通过HTTP POST的方式调用Prometheus的 `/-/reload` 接口都可以让Prometheus重载当前配置文件中的配置，各种组件都会尝试优雅的处理可能失败的情况。
 
-### Can I send alerts?
+### Prometheus可以发送报警吗？
 
-Yes, with the [Alertmanager](https://github.com/prometheus/alertmanager).
+是的，可以使用[Alertmanager](https://github.com/prometheus/alertmanager)来发送报警。
 
-Currently, the following external systems are supported:
+目前 Alertmanager 支持以下的外部系统：
 
 * Email
 * Generic Webhooks
@@ -109,20 +94,14 @@ Currently, the following external systems are supported:
 * [Pushover](https://pushover.net/)
 * [Slack](https://slack.com/)
 
-### Can I create dashboards?
+### 可以创建dashboard吗？
 
-Yes, we recommend [Grafana](/docs_cn/visualization/grafana/) for production
-usage. There are also [Console templates](/docs_cn/visualization/consoles/).
+是的，我们推荐在生产环境中使用 [Grafana](/docs_cn/visualization/grafana/) 来绘制 dashboard, 不过也可以通过 [Console templates](/docs_cn/visualization/consoles/) 的方式来实现。
 
 ### Can I change the timezone? Why is everything in UTC?
+### 可以更改时区吗？ 为什么都是用UTC时区？
 
-To avoid any kind of timezone confusion, especially when the so-called
-daylight saving time is involved, we decided to exclusively use Unix
-time internally and UTC for display purposes in all components of
-Prometheus. A carefully done timezone selection could be introduced
-into the UI. Contributions are welcome. See
-[issue #500](https://github.com/prometheus/prometheus/issues/500)
-for the current state of this effort.
+为了避免任何时区混淆，特别是当涉及所谓的夏令时间时，我们决定在内部专门使用Unix时间，并且在Prometheus的所有组件中使用UTC。你可以在UI中设计一个精致的时区选择组件，我们也欢迎你为解决时区的问题贡献你的代码，你可以查看[issue #500](https://github.com/prometheus/prometheus/issues/500)了解这个问题当前的状态。
 
 ## Instrumentation
 
