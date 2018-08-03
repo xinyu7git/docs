@@ -103,51 +103,38 @@ Prometheus是在遵循 [Apache 2.0](https://github.com/prometheus/prometheus/blo
 
 为了避免任何时区混淆，特别是当涉及所谓的夏令时间时，我们决定在内部专门使用Unix时间，并且在Prometheus的所有组件中使用UTC。你可以在UI中设计一个精致的时区选择组件，我们也欢迎你为解决时区的问题贡献你的代码，你可以查看[issue #500](https://github.com/prometheus/prometheus/issues/500)了解这个问题当前的状态。
 
-## Instrumentation
+## 性能测量
 
-### Which languages have instrumentation libraries?
+### 哪些语言具备性能测量(instrumentation)的库（library)？
 
-There are a number of client libraries for instrumenting your services with
-Prometheus metrics. See the [client libraries](/docs_cn/instrumenting/clientlibs/)
-documentation for details.
+有很多的客户端库可以让你的服务产生Prometheus的性能监控指标。可以点击[客户端库](/docs_cn/instrumenting/clientlibs/)这一章查看更多详细内容。
 
-If you are interested in contributing a client library for a new language, see
-the [exposition formats](/docs_cn/instrumenting/exposition_formats/).
+如果你有兴趣为新的语言贡献一个客户端库，可以参阅  [exposition formats](/docs_cn/instrumenting/exposition_formats/).
 
-### Can I monitor machines?
+### Prometheus可以用来监控服务器吗？
 
-Yes, the [Node Exporter](https://github.com/prometheus/node_exporter) exposes
-an extensive set of machine-level metrics on Linux and other Unix systems such
-as CPU usage, memory, disk utilization, filesystem fullness, and network
-bandwidth.
+是的，  [Node Exporter](https://github.com/prometheus/node_exporter) 可以在Linux或其他Unix操作系统上部署，通过接口暴露出一系列的服务器级别的监控指标数据，例如：CPU使用率，内存，磁盘利用率，文件系统状态和网络带宽等。
 
-### Can I monitor network devices?
+### Prometheus可以监控网络设备吗？
 
-Yes, the [SNMP Exporter](https://github.com/prometheus/snmp_exporter) allows
-monitoring of devices that support SNMP.
+是的，[SNMP Exporter](https://github.com/prometheus/snmp_exporter) 可以用来监控任何支持SNMP协议的设备。
 
 ### Can I monitor batch jobs?
+### Prometheus可以监控批量任务吗？
 
-Yes, using the [Pushgateway](/docs_cn/instrumenting/pushing/). See also the
-[best practices](/docs_cn/practices/instrumentation/#batch-jobs) for monitoring batch
-jobs.
+是的，可以使用 [Pushgateway](/docs_cn/instrumenting/pushing/). 你也可以查看 [最佳实践](/docs_cn/practices/instrumentation/#batch-jobs) 一文中关于监控批量任务的内容。
 
-### What applications can Prometheus monitor out of the box?
+### Prometheus开箱即用的监控应用程序有哪些？
 
-See [the list of exporters and integrations](/docs_cn/instrumenting/exporters/).
+可以查看 [exporters and integrations列表](/docs_cn/instrumenting/exporters/) 这一章了解详细内容.
 
-### Can I monitor JVM applications via JMX?
+### Prometheus可以通过JMX监控JVM应用程序吗？
 
-Yes, for applications that you cannot instrument directly with the Java client, you can use the [JMX Exporter](https://github.com/prometheus/jmx_exporter)
-either standalone or as a Java Agent.
+是的，对于无法直接使用Java客户端进行检测的应用程序，你可以单独使用 [JMX Exporter](https://github.com/prometheus/jmx_exporter) ，也可以将其用作Java代理。 
 
-### What is the performance impact of instrumentation?
+### 添加性能监控对服务本身的性能有多大的影响？
 
-Performance across client libraries and languages may vary. For Java,
-[benchmarks](https://github.com/prometheus/client_java/blob/master/benchmark/README.md)
-indicate that incrementing a counter/gauge with the Java client will take
-12-17ns, depending on contention. This is negligible for all but the most
-latency-critical code.
+不同的客户端库和语言对性能的影响可能会有所不同。例如，对Java来说，[基准测试](https://github.com/prometheus/client_java/blob/master/benchmark/README.md) 表明，使用Java客户端递增计数器(counter)/计量器(gauge)将需要花费12-17ns，跟关键步骤的延时相比，这几乎可以忽略不计。
 
 ## Troubleshooting
 
