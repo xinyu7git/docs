@@ -80,14 +80,17 @@ global:
   [ smtp_require_tls: <bool> | default = true ]
 
   # The API URL to use for Slack notifications.
-  [ slack_api_url: <string> ]
-  [ victorops_api_key: <string> ]
+  [ slack_api_url: <secret> ]
+  [ victorops_api_key: <secret> ]
   [ victorops_api_url: <string> | default = "https://alert.victorops.com/integrations/generic/20131114/alert/" ]
   [ pagerduty_url: <string> | default = "https://events.pagerduty.com/v2/enqueue" ]
-  [ opsgenie_api_key: <string> ]
+  [ opsgenie_api_key: <secret> ]
   [ opsgenie_api_url: <string> | default = "https://api.opsgenie.com/" ]
   [ hipchat_api_url: <string> | default = "https://api.hipchat.com/" ]
   [ hipchat_auth_token: <secret> ]
+  [ wechat_api_url: <string> | default = "https://qyapi.weixin.qq.com/cgi-bin/" ]
+  [ wechat_api_secret: <secret> ]
+  [ wechat_api_corp_id: <string> ]
 
   # The default HTTP client configuration
   [ http_config: <http_config> ]
@@ -188,9 +191,10 @@ route:
 
 ## `<inhibit_rule>`
 
-An inhibition rule is a rule that mutes an alert matching a set of matchers
-under the condition that an alert exists that matches another set of matchers.
-Both alerts must have a set of equal labels.
+An inhibition rule mutes an alert (target) matching a set of matchers
+when an alert (source) exists that matches another set of matchers.
+Both target and source alerts must have the same label values 
+for the label names in the `equal` list.
 
 __Alerts can inhibit themselves. Avoid writing inhibition rules where
 an alert matches both source and target.__
@@ -237,19 +241,30 @@ basic_auth:
 
 # Configures the TLS settings.
 tls_config:
-  # CA certificate to validate the server certificate with.
-  [ ca_file: <filepath> ]
-  # Certificate and key files for client cert authentication to the server.
-  [ cert_file: <filepath> ]
-  [ key_file: <filepath> ]
-  # ServerName extension to indicate the name of the server.
-  # http://tools.ietf.org/html/rfc4366#section-3.1
-  [ server_name: <string> ]
-  # Disable validation of the server certificate.
-  [ insecure_skip_verify: <boolean> | default = false]
+  [ <tls_config> ]
 
 # Optional proxy URL.
 [ proxy_url: <string> ]
+```
+
+## `<tls_config>`
+
+A `tls_config` allows configuring TLS connections.
+
+```yaml
+# CA certificate to validate the server certificate with.
+[ ca_file: <filepath> ]
+
+# Certificate and key files for client cert authentication to the server.
+[ cert_file: <filepath> ]
+[ key_file: <filepath> ]
+
+# ServerName extension to indicate the name of the server.
+# http://tools.ietf.org/html/rfc4366#section-3.1
+[ server_name: <string> ]
+
+# Disable validation of the server certificate.
+[ insecure_skip_verify: <boolean> | default = false]
 ```
 
 ## `<receiver>`
@@ -279,6 +294,8 @@ webhook_configs:
   [ - <webhook_config>, ... ]
 victorops_configs:
   [ - <victorops_config>, ... ]
+wechat_configs:
+  [ - <wechat_config>, ... ]
 ```
 
 ## `<email_config>`
@@ -307,6 +324,10 @@ to: <tmpl_string>
 
 # The SMTP TLS requirement.
 [ require_tls: <bool> | default = global.smtp_require_tls ]
+
+# TLS configuration.
+tls_config:
+  [ <tls_config> ]
 
 # The HTML body of the email notification.
 [ html: <tmpl_string> | default = '{{ template "email.default.html" . }}' ]
@@ -387,8 +408,35 @@ service_key: <tmpl_secret>
   num_resolved: '{{ .Alerts.Resolved | len }}'
 } ]
 
+# Images to attach to the incident.
+images:
+  [ <image_config> ... ]
+
+# Links to attach to the incident.
+links:
+  [ <link_config> ... ]
+
 # The HTTP client's configuration.
 [ http_config: <http_config> | default = global.http_config ]
+```
+
+### `<image_config>`
+
+The fields are documented in the [PagerDuty API documentation](https://v2.developer.pagerduty.com/v2/docs/send-an-event-events-api-v2#section-the-images-property).
+
+```yaml
+source: <tmpl_string>
+alt: <tmpl_string>
+text: <tmpl_string>
+```
+
+### `<link_config>`
+
+The fields are documented in the [PagerDuty API documentation](https://v2.developer.pagerduty.com/v2/docs/send-an-event-events-api-v2#section-the-links-property).
+
+```yaml
+href: <tmpl_string>
+text: <tmpl_string>
 ```
 
 ## `<pushover_config>`
@@ -431,7 +479,9 @@ token: <secret>
 
 ## `<slack_config>`
 
-Slack notifications are sent via [Slack webhooks](https://api.slack.com/incoming-webhooks).
+Slack notifications are sent via [Slack
+webhooks](https://api.slack.com/incoming-webhooks). The notification contains
+an [attachment](https://api.slack.com/docs/message-attachments).
 
 ```yaml
 # Whether or not to notify about resolved alerts.
@@ -444,18 +494,50 @@ Slack notifications are sent via [Slack webhooks](https://api.slack.com/incoming
 channel: <tmpl_string>
 
 # API request data as defined by the Slack webhook API.
-[ color: <tmpl_string> | default = '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}' ]
-[ username: <tmpl_string> | default = '{{ template "slack.default.username" . }}' ]
-[ title: <tmpl_string> | default = '{{ template "slack.default.title" . }}' ]
-[ title_link: <tmpl_string> | default = '{{ template "slack.default.titlelink" . }}' ]
 [ icon_emoji: <tmpl_string> ]
 [ icon_url: <tmpl_string> ]
-[ pretext: <tmpl_string> | default = '{{ template "slack.default.pretext" . }}' ]
-[ text: <tmpl_string> | default = '{{ template "slack.default.text" . }}' ]
+[ link_names: <boolean> | default = false ]
+[ username: <tmpl_string> | default = '{{ template "slack.default.username" . }}' ]
+# The following parameters define the attachment.
+actions:
+  [ <action_config> ... ]
+[ callback_id: <tmpl_string> | default = '{{ template "slack.default.callbackid" . }}' ]
+[ color: <tmpl_string> | default = '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}' ]
 [ fallback: <tmpl_string> | default = '{{ template "slack.default.fallback" . }}' ]
+fields:
+  [ <field_config> ... ]
+[ footer: <tmpl_string> | default = '{{ template "slack.default.footer" . }}' ]
+[ pretext: <tmpl_string> | default = '{{ template "slack.default.pretext" . }}' ]
+[ short_fields: <boolean> | default = false ]
+[ text: <tmpl_string> | default = '{{ template "slack.default.text" . }}' ]
+[ title: <tmpl_string> | default = '{{ template "slack.default.title" . }}' ]
+[ title_link: <tmpl_string> | default = '{{ template "slack.default.titlelink" . }}' ]
+[ image_url: <tmpl_string> ]
+[ thumb_url: <tmpl_string> ]
 
 # The HTTP client's configuration.
 [ http_config: <http_config> | default = global.http_config ]
+```
+
+### `<action_config>`
+
+The fields are documented in the [Slack API documentation](https://api.slack.com/docs/message-attachments#action_fields).
+
+```yaml
+type: <tmpl_string>
+text: <tmpl_string>
+url: <tmpl_string>
+[ style: <tmpl_string> [ default = '' ]
+```
+
+### `<field_config>`
+
+The fields are documented in the [Slack API documentation](https://api.slack.com/docs/message-attachments#fields).
+
+```yaml
+title: <tmpl_string>
+value: <tmpl_string>
+[ short: <boolean> | default = slack_config.short_fields ]
 ```
 
 ## `<opsgenie_config>`
@@ -516,7 +598,7 @@ VictorOps notifications are sent out via the [VictorOps API](https://help.victor
 [ api_url: <string> | default = global.victorops_api_url ]
 
 # A key used to map the alert to a team.
-routing_key: <string>
+routing_key: <tmpl_string>
 
 # Describes the behavior of the alert (CRITICAL, WARNING, INFO).
 [ message_type: <tmpl_string> | default = 'CRITICAL' ]
@@ -565,10 +647,12 @@ endpoint:
   "externalURL": <string>,  // backlink to the Alertmanager.
   "alerts": [
     {
+      "status": "<resolved|firing>",
       "labels": <object>,
       "annotations": <object>,
       "startsAt": "<rfc3339>",
-      "endsAt": "<rfc3339>"
+      "endsAt": "<rfc3339>",
+      "generatorURL": <string> // identifies the entity that caused the alert
     },
     ...
   ]
@@ -578,3 +662,29 @@ endpoint:
 There is a list of
 [integrations](/docs/operating/integrations/#alertmanager-webhook-receiver) with
 this feature.
+
+## `<wechat_config>`
+
+WeChat notifications are sent via the [WeChat
+API](http://admin.wechat.com/wiki/index.php?title=Customer_Service_Messages).
+
+```yaml
+# Whether or not to notify about resolved alerts.
+[ send_resolved: <boolean> | default = false ]
+
+# The API key to use when talking to the WeChat API.
+[ api_secret: <secret> | default = global.wechat_api_secret ]
+
+# The WeChat API URL.
+[ api_url: <string> | default = global.wechat_api_url ]
+
+# The corp id for authentication.
+[ corp_id: <string> | default = global.wechat_api_corp_id ]
+
+# API request data as defined by the WeChat API.
+[ message: <tmpl_string> | default = '{{ template "wechat.default.message" . }}' ]
+[ agent_id: <string> | default = '{{ template "wechat.default.agent_id" . }}' ]
+[ to_user: <string> | default = '{{ template "wechat.default.to_user" . }}' ]
+[ to_party: <string> | default = '{{ template "wechat.default.to_party" . }}' ]
+[ to_tag: <string> | default = '{{ template "wechat.default.to_tag" . }}' ]
+```

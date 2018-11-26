@@ -33,8 +33,10 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
    * [Aerospike exporter](https://github.com/alicebob/asprom)
    * [ClickHouse exporter](https://github.com/f1yegor/clickhouse_exporter)
    * [Consul exporter](https://github.com/prometheus/consul_exporter) (**official**)
+   * [Couchbase exporter](https://github.com/blakelead/couchbase_exporter)
    * [CouchDB exporter](https://github.com/gesellix/couchdb-exporter)
    * [ElasticSearch exporter](https://github.com/justwatchcom/elasticsearch_exporter)
+   * [EventStore exporter](https://github.com/marcinbudny/eventstore_exporter)
    * [Memcached exporter](https://github.com/prometheus/memcached_exporter) (**official**)
    * [MongoDB exporter](https://github.com/dcu/mongodb_exporter)
    * [MSSQL server exporter](https://github.com/awaragi/prometheus-mssql-exporter)
@@ -44,6 +46,7 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
    * [PgBouncer exporter](http://git.cbaines.net/prometheus-pgbouncer-exporter/about)
    * [PostgreSQL exporter](https://github.com/wrouesnel/postgres_exporter)
    * [ProxySQL exporter](https://github.com/percona/proxysql_exporter)
+   * [RavenDB exporter](https://github.com/marcinbudny/ravendb_exporter)
    * [Redis exporter](https://github.com/oliver006/redis_exporter)
    * [RethinkDB exporter](https://github.com/oliver006/rethinkdb_exporter)
    * [SQL exporter](https://github.com/free/sql_exporter)
@@ -51,10 +54,14 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
 
 ### Hardware related
    * [apcupsd exporter](https://github.com/mdlayher/apcupsd_exporter)
+   * [Collins exporter](https://github.com/soundcloud/collins_exporter)
+   * [IBM Z HMC exporter](https://github.com/zhmcclient/zhmc-prometheus-exporter)
    * [IoT Edison exporter](https://github.com/roman-vynar/edison_exporter)
-   * [IPMI exporter](https://github.com/lovoo/ipmi_exporter)
+   * [IPMI exporter](https://github.com/soundcloud/ipmi_exporter)
    * [knxd exporter](https://github.com/RichiH/knxd_exporter)
    * [Node/system metrics exporter](https://github.com/prometheus/node_exporter) (**official**)
+   * [NVIDIA GPU exporter](https://github.com/mindprince/nvidia_gpu_prometheus_exporter)
+   * [ProSAFE exporter](https://github.com/dalance/prosafe_exporter)
    * [Ubiquiti UniFi exporter](https://github.com/mdlayher/unifi_exporter)
 
 ### Messaging systems
@@ -70,6 +77,7 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
 
 ### Storage
    * [Ceph exporter](https://github.com/digitalocean/ceph_exporter)
+   * [Ceph RADOSGW exporter](https://github.com/blemmenes/radosgw_usage_exporter)
    * [Gluster exporter](https://github.com/ofesseler/gluster_exporter)
    * [Hadoop HDFS FSImage exporter](https://github.com/marcelmay/hadoop-hdfs-fsimage-exporter)
    * [Lustre exporter](https://github.com/HewlettPackard/lustre_exporter)
@@ -81,6 +89,7 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
    * [Nginx metric library](https://github.com/knyar/nginx-lua-prometheus)
    * [Nginx VTS exporter](https://github.com/hnlq715/nginx-vts-exporter)
    * [Passenger exporter](https://github.com/stuartnelson3/passenger_exporter)
+   * [Squid exporter](https://github.com/boynux/squid-exporter)
    * [Tinyproxy exporter](https://github.com/igzivkov/tinyproxy_exporter)
    * [Varnish exporter](https://github.com/jonnenauha/prometheus_varnish_exporter)
    * [WebDriver exporter](https://github.com/mattbostock/webdriver_exporter)
@@ -123,6 +132,7 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
    * [New Relic exporter](https://github.com/jfindley/newrelic_exporter)
    * [NRPE exporter](https://github.com/robustperception/nrpe_exporter)
    * [Osquery exporter](https://github.com/zwopir/osquery_exporter)
+   * [OTC CloudEye exporter](https://github.com/tiagoReichert/otc-cloudeye-prometheus-exporter)
    * [Pingdom exporter](https://github.com/giantswarm/prometheus-pingdom-exporter)
    * [scollector exporter](https://github.com/tgulacsi/prometheus_scollector)
    * [Sensu exporter](https://github.com/reachlin/sensu_exporter)
@@ -130,6 +140,7 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
    * [StatsD exporter](https://github.com/prometheus/statsd_exporter) (**official**)
 
 ### Miscellaneous
+   * [ACT Fibernet Exporter](https://git.captnemo.in/nemo/prometheus-act-exporter)
    * [Bamboo exporter](https://github.com/AndreyVMarkelov/bamboo-prometheus-exporter)
    * [BIG-IP exporter](https://github.com/ExpressenAB/bigip_exporter)
    * [BIND exporter](https://github.com/digitalocean/bind_exporter)
@@ -137,16 +148,22 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
    * [Blackbox exporter](https://github.com/prometheus/blackbox_exporter) (**official**)
    * [BOSH exporter](https://github.com/cloudfoundry-community/bosh_exporter)
    * [cAdvisor](https://github.com/google/cadvisor)
+   * [Cachet exporter](https://github.com/ContaAzul/cachet_exporter)
+   * [ccache exporter](https://github.com/virtualtam/ccache_exporter)
    * [Confluence exporter](https://github.com/AndreyVMarkelov/prom-confluence-exporter)
    * [Dovecot exporter](https://github.com/kumina/dovecot_exporter)
+   * [eBPF exporter](https://github.com/cloudflare/ebpf_exporter)
+   * [Ethereum Client exporter](https://github.com/31z4/ethereum-prometheus-exporter)
    * [Jenkins exporter](https://github.com/lovoo/jenkins_exporter)
    * [JIRA exporter](https://github.com/AndreyVMarkelov/jira-prometheus-exporter)
    * [Kannel exporter](https://github.com/apostvav/kannel_exporter)
    * [Kemp LoadBalancer exporter](https://github.com/giantswarm/prometheus-kemp-exporter)
+   * [Kibana Exporter](https://github.com/pjhampton/kibana-prometheus-exporter)
    * [Meteor JS web framework exporter](https://atmospherejs.com/sevki/prometheus-exporter)
    * [Minecraft exporter module](https://github.com/Baughn/PrometheusIntegration)
    * [PHP-FPM exporter](https://github.com/bakins/php-fpm-exporter)
    * [PowerDNS exporter](https://github.com/ledgr/powerdns_exporter)
+   * [Presto exporter](https://github.com/yahoojapan/presto_exporter)
    * [Process exporter](https://github.com/ncabatoff/process-exporter)
    * [rTorrent exporter](https://github.com/mdlayher/rtorrent_exporter)
    * [SABnzbd exporter](https://github.com/msroest/sabnzbd_exporter)
@@ -157,7 +174,6 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
    * [Transmission exporter](https://github.com/metalmatze/transmission-exporter)
    * [Unbound exporter](https://github.com/kumina/unbound_exporter)
    * [Xen exporter](https://github.com/lovoo/xenstats_exporter)
-   
 
 When implementing a new Prometheus exporter, please follow the
 [guidelines on writing exporters](/docs/instrumenting/writing_exporters)
@@ -171,27 +187,34 @@ possible.
 Some third-party software exposes metrics in the Prometheus format, so no
 separate exporters are needed:
 
+   * [Ballerina](https://ballerina.io/)
    * [Ceph](http://docs.ceph.com/docs/master/mgr/prometheus/)
    * [Collectd](https://collectd.org/wiki/index.php/Plugin:Write_Prometheus)
-   * [Concourse](https://concourse.ci/)
+   * [Concourse](https://concourse-ci.org/)
    * [CRG Roller Derby Scoreboard](https://github.com/rollerderby/scoreboard) (**direct**)
    * [Docker Daemon](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-metrics)
    * [Doorman](https://github.com/youtube/doorman) (**direct**)
    * [Etcd](https://github.com/coreos/etcd) (**direct**)
+   * [Flink](https://github.com/apache/flink)
    * [FreeBSD Kernel](https://www.freebsd.org/cgi/man.cgi?query=prometheus_sysctl_exporter&apropos=0&sektion=8&manpath=FreeBSD+12-current&arch=default&format=html)
    * [Grafana](http://docs.grafana.org/administration/metrics/)
    * [Kubernetes](https://github.com/kubernetes/kubernetes) (**direct**)
    * [Linkerd](https://github.com/BuoyantIO/linkerd)
    * [mgmt](https://github.com/purpleidea/mgmt/blob/master/docs/prometheus.md)
+   * [MidoNet](https://github.com/midonet/midonet)
+   * [midonet-kubernetes](https://github.com/midonet/midonet-kubernetes) (**direct**)
+   * [Minio](https://github.com/minio/minio)
    * [Netdata](https://github.com/firehol/netdata)
    * [Pretix](https://pretix.eu/)
    * [Quobyte](https://www.quobyte.com/) (**direct**)
    * [RobustIRC](http://robustirc.net/)
+   * [ScyllaDB](http://github.com/scylladb/scylla)
    * [Skipper](https://github.com/zalando/skipper)
    * [SkyDNS](https://github.com/skynetservices/skydns) (**direct**)
    * [Telegraf](https://github.com/influxdata/telegraf/tree/master/plugins/outputs/prometheus_client)
+   * [Traefik](https://github.com/containous/traefik)
    * [Weave Flux](https://github.com/weaveworks/flux)
-   
+
 The software marked *direct* is also directly instrumented with a Prometheus client library.
 
 ## Other third-party utilities
@@ -206,7 +229,8 @@ practices.
    * Go: [go-metrics instrumentation library](https://github.com/armon/go-metrics)
    * Go: [gokit](https://github.com/peterbourgon/gokit)
    * Go: [prombolt](https://github.com/mdlayher/prombolt)
+   * Java/JVM: [EclipseLink metrics collector](https://github.com/VitaNuova/eclipselinkexporter)
    * Java/JVM: [Hystrix metrics publisher](https://github.com/ahus1/prometheus-hystrix)
+   * Java/JVM: [Jersey metrics collector](https://github.com/VitaNuova/jerseyexporter)
    * Python-Django: [django-prometheus](https://github.com/korfuri/django-prometheus)
    * Node.js: [swagger-stats](https://github.com/slanatech/swagger-stats)
-   

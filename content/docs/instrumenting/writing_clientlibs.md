@@ -250,8 +250,9 @@ Client libraries MUST NOT under any circumstances allow users to have different
 label names for the same metric for Gauge/Counter/Summary/Histogram or any
 other Collector offered by the library.
 
-If your client library does validation of metrics at collect time, it MAY also
-verify this for custom Collectors.
+Metrics from custom collectors should almost always have consistent label
+names. As there are still rare but valid use cases where this is not the case,
+client libraries should not verify this.
 
 While labels are powerful, the majority of metrics will not have labels.
 Accordingly the API should allow for labels but not dominate it.
@@ -311,15 +312,8 @@ descriptions, to lead by example.
 
 ## Exposition
 
-Clients MUST implement one of the documented [exposition
-formats](/docs/instrumenting/exposition_formats).
-
-Clients MAY implement more than one format. There SHOULD be a human readable
-format offered.
-
-If in doubt, go for the text format. It doesn’t have a dependency (protobuf),
-tends to be easy to produce, is human readable and the performance benefits of
-protobuf are not that significant for most use cases.
+Clients MUST implement the text-based exposition format outlined in the
+[exposition formats](/docs/instrumenting/exposition_formats) documentation.
 
 Reproducible order of the exposed metrics is ENCOURAGED (especially for human
 readable formats) if it can be implemented without a significant resource cost.
@@ -339,15 +333,16 @@ These exports should have the prefix `process_`. If a language or runtime
 doesn't expose one of the variables it'd just not export it. All memory values
 in bytes, all times in unixtime/seconds.
 
-| Metric name                     | Help string                                            | Unit             |
-| ------------------------------- | ------------------------------------------------------ | ---------------  |
-| `process_cpu_seconds_total`     | Total user and system CPU time spent in seconds.       | seconds          |
-| `process_open_fds`              | Number of open file descriptors.                       | file descriptors |
-| `process_max_fds`               | Maximum number of open file descriptors.               | file descriptors |
-| `process_virtual_memory_bytes`  | Virtual memory size in bytes.                          | bytes            |
-| `process_resident_memory_bytes` | Resident memory size in bytes.                         | bytes            |
-| `process_heap_bytes`            | Process heap size in bytes.                            | bytes            |
-| `process_start_time_seconds`    | Start time of the process since unix epoch in seconds. | seconds          |
+| Metric name                        | Help string                                            | Unit             |
+| ---------------------------------- | ------------------------------------------------------ | ---------------  |
+| `process_cpu_seconds_total`        | Total user and system CPU time spent in seconds.       | seconds          |
+| `process_open_fds`                 | Number of open file descriptors.                       | file descriptors |
+| `process_max_fds`                  | Maximum number of open file descriptors.               | file descriptors |
+| `process_virtual_memory_bytes`     | Virtual memory size in bytes.                          | bytes            |
+| `process_virtual_memory_max_bytes` | Maximum amount of virtual memory available in bytes.   | bytes            |
+| `process_resident_memory_bytes`    | Resident memory size in bytes.                         | bytes            |
+| `process_heap_bytes`               | Process heap size in bytes.                            | bytes            |
+| `process_start_time_seconds`       | Start time of the process since unix epoch in seconds. | seconds          |
 
 ### Runtime metrics
 
@@ -367,12 +362,12 @@ unit-test their use of the instrumentation code. For example, the
 ## Packaging and dependencies
 
 Ideally, a client library can be included in any application to add some
-instrumentation, without having to worry about it breaking the application.
+instrumentation without breaking the application.
 
 Accordingly, caution is advised when adding dependencies to the client library.
-For example, if a user adds a library that uses a Prometheus client that
-requires version 1.4 of protobuf but the application uses 1.2 elsewhere, what
-will happen?
+For example, if you add a library that uses a Prometheus client that requires
+version x.y of a library but the application uses x.z elsewhere, will that have
+an adverse impact on the application?
 
 It is suggested that where this may arise, that the core instrumentation is
 separated from the bridges/exposition of metrics in a given format. For
